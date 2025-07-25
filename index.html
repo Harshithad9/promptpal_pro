@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROMPTPAL - AI Prompt Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <svg class="h-8 w-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 14M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2V5.236a2 2 0 00-.57-1.414L18.586 2.414A2 2 0 0017.172 2H5z"></path>
+                </svg>
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    PROMPTPAL
+                </h1>
+            </div>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Generate custom, optimized prompts for ChatGPT, Bard, and other AI tools. Select a category, customize your
+                inputs, and get the perfect prompt.
+            </p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="w-full max-w-md mx-auto mb-8">
+            <div class="inline-flex h-10 items-center justify-center rounded-md bg-gray-100 p-1 text-gray-500 w-full">
+                <button id="generate-tab" class="tab-button active inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all w-full">
+                    Generate
+                </button>
+                <button id="saved-tab" class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all w-full">
+                    Saved Prompts
+                </button>
+            </div>
+        </div>
+
+        <!-- Generate Tab Content -->
+        <div id="generate-content" class="tab-content">
+            <!-- Category Selection -->
+            <div id="category-selection" class="max-w-6xl mx-auto">
+                <h2 class="text-2xl font-semibold text-center mb-8">Choose a Category</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="categories-grid">
+                    <!-- Categories will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Prompt Generation -->
+            <div id="prompt-generation" class="max-w-4xl mx-auto hidden">
+                <div class="flex items-center gap-4 mb-8">
+                    <button id="back-button" class="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Back to Categories
+                    </button>
+                    <div class="flex items-center gap-3">
+                        <div id="selected-category-icon" class="w-10 h-10 rounded-lg flex items-center justify-center text-white text-lg">
+                        </div>
+                        <div>
+                            <h2 id="selected-category-title" class="text-2xl font-semibold"></h2>
+                            <p id="selected-category-description" class="text-gray-600"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Form -->
+                    <div class="bg-white rounded-lg border shadow-sm">
+                        <div class="p-6 border-b">
+                            <h3 class="text-lg font-semibold">Customize Your Prompt</h3>
+                        </div>
+                        <div class="p-6">
+                            <form id="prompt-form" class="space-y-4">
+                                <!-- Form fields will be populated by JavaScript -->
+                            </form>
+                            <button id="generate-button" class="w-full mt-4 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                                </svg>
+                                Generate Prompt
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Generated Prompt -->
+                    <div id="generated-prompt-card" class="bg-white rounded-lg border shadow-sm hidden">
+                        <div class="p-6 border-b">
+                            <h3 class="text-lg font-semibold">Generated Prompt</h3>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <textarea id="generated-prompt-text" readonly class="w-full min-h-[200px] p-3 border rounded-md resize-none bg-gray-50"></textarea>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <button id="copy-button" class="flex-1 border border-gray-300 bg-transparent px-4 py-2 rounded-md hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                    </svg>
+                                    Copy
+                                </button>
+                                <button id="save-button" class="flex-1 border border-gray-300 bg-transparent px-4 py-2 rounded-md hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                                    </svg>
+                                    Save
+                                </button>
+                                <button id="try-chatgpt-button" class="flex-1 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                    Try in ChatGPT
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saved Tab Content -->
+        <div id="saved-content" class="tab-content hidden">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-semibold text-center mb-8">Your Saved Prompts</h2>
+                <div id="saved-prompts-container">
+                    <!-- Saved prompts will be populated by JavaScript -->
+                </div>
+                <div id="no-saved-prompts" class="text-center py-12 hidden">
+                    <div class="text-6xl mb-4">📝</div>
+                    <h3 class="text-xl font-semibold mb-2">No saved prompts yet</h3>
+                    <p class="text-gray-600">Generate and save prompts to see them here</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
