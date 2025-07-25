@@ -23,7 +23,8 @@ PromptPal is a clean and responsive frontend web app built to empower AI enthusi
 
 ---
 
-🧠 Idea Behind PromptPal
+## 🧠 Idea Behind PromptPal
+
 The goal is to create a simple productivity tool that helps users save mental bandwidth. Instead of repeatedly typing or remembering prompts (for ChatGPT, emails, coding, etc.), users can build and reuse a personal prompt library.
 
 This project was built in under 24 hours as part of the Inovact Power-Up Challenge 🚀
